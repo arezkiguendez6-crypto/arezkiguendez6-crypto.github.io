@@ -8,7 +8,7 @@ set sw=4
 set smarttab
 
 set background=dark
-colorscheme unokait
+colorscheme unokai
 
 set columns=80
 set colorcolumn=80
