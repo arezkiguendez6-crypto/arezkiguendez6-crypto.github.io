@@ -8,7 +8,7 @@ set sw=4
 set smarttab
 
 set background=dark
-colorscheme desert
+colorscheme unokait
 
 set columns=80
 set colorcolumn=80
