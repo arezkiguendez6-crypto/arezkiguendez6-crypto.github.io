@@ -35,13 +35,13 @@
         <p>Once we're in Vim, how are we supposed to move around?</p>
 
         <ul>
-            <li>H - Moves Left</li>
+            <li>h - Moves Left</li>
        
-            <li>L - Moves Right</li>
+            <li>l - Moves Right</li>
        
-        <li>J - Moves Down</li>
+        <li>j - Moves Down</li>
        
-        <li>K - Moves Up</li>
+        <li>k - Moves Up</li>
 
         <h3>What do specific elements/tags do?</h3>
        
@@ -59,11 +59,29 @@ in paragraphs to display the code, for example.</p>
 Lorem ipsum dolo rsit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 tempor invidunt ut labore et <code>dolore magna</code> aliquyam.
 
-<h3>KBD and Samp</h3>
+<h3>How to use <code>KBD and Samp</code></h3>
+
+<p>The "Kbd" tag sometimes envelops text with a rectanglular box and with mono
+tone font, for example.</p>
+<kbd>Cmd + Z</kbd>
 
 
+<p>The "Samp" tag is a monospaced font that can be bold or italicized that repr-
+esents a output, such as.</p>
+
+<samp>Incorrect Password Try Again.</samp>
+
+<h2>Lastly, how to leave and save a vim project.</h2>
+
+<li>
+    <li><kbd>: + w</kbd> to save but not leave</li>
+    <li><kbd>: + q</kbd> to quit without saving</li>
+    <li><kbd>: +wq</kbd> to quit and save</li>
+        </ul>
+        <ol>
+            <ol>1.After quitting, "git add ."</ol>
+            <ol>2.git commit -m "msg".</ol>
+            <ol>3. git push origin main.</ol>
 
 </body>
 </html>
-
-A few <kbd> / <samp> tags, used appropriately
