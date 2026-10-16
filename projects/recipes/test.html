@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Infinite Tipping Meter</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0f19;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            width: 420px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            color: #8a99ad;
+        }
+
+        #milestone-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            height: 35px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #a4b0be;
+        }
+
+        .percentage-display {
+            font-size: 4rem;
+            font-weight: 900;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff7675, #74b9ff, #55efc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Interactive Drag Track using standardized Pointer Actions */
+        .drag-zone {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px 20px;
+            cursor: ew-resize;
+            position: relative;
+            touch-action: none; /* Prevents systemic mobile page hijacking */
+        }
+
+        .drag-zone:active {
+            border-color: #74b9ff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .drag-bar {
+            width: 90px;
+            height: 14px;
+            background: #74b9ff;
+            border-radius: 7px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 20px rgba(116, 185, 255, 0.6);
+            pointer-events: none;
+        }
+
+        .drag-bar::before, .drag-bar::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            width: 4px;
+            height: 24px;
+            background: #ffffff;
+            opacity: 0.4;
+            border-radius: 2px;
+        }
+        .drag-bar::before { left: -15px; }
+        .drag-bar::after { right: -15px; }
+
+        .instructions {
+            font-size: 0.8rem;
+            color: #636e72;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .pulse-text {
+            animation: pulse 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.7); opacity: 0.5; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="flash"></div>
+<canvas id="effect-canvas"></canvas>
+
+<div class="card">
+    <h1>Infinite Tip Meter</h1>
+    <div id="milestone-title">Absolute Zero</div>
+    <div class="percentage-display" id="percentage">0%</div>
+    
+    <div class="drag-zone" id="drag-zone">
+        <div class="drag-bar" id="drag-bar"></div>
+        <div class="instructions">Hold Down & Slide Anywhere</div>
+    </div>
+</div>
+
+<script>
+    let percentage = 0;
+    let isDragging = false;
+    let lastPointerX = 0;
+    let lastMilestone = 0;
+
+    const percentageEl = document.getElementById('percentage');
+    const dragZone = document.getElementById('drag-zone');
+    const dragBar = document.getElementById('drag-bar');
+    const milestoneTitle = document.getElementById('milestone-title');
+    const flash = document.getElementById('flash');
+    const canvas = document.getElementById('effect-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Canvas Particles Engine
+    let particles = [];
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 5 + 3;
+            this.speedX = (Math.random() - 0.5) * 16;
+            this.speedY = (Math.random() - 0.5) * 16;
+            this.color = color;
+            this.alpha = 1;
+            this.decay = Math.random() * 0.02 + 0.015;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.alpha -= this.decay;
+        }
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    function triggerMilestoneEffect(isPositive) {
+        const color = isPositive ? '#55efc4' : '#ff7675';
+        
+        flash.style.background = color;
+        flash.style.opacity = '0.2';
+        setTimeout(() => flash.style.opacity = '0', 60);
+
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle(window.innerWidth / 2, window.innerHeight / 2, color));
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles = particles.filter(p => p.alpha > 0);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    function getMilestoneName(pct) {
+        if (pct === 0) return "Absolute Zero";
+        const level = Math.abs(pct) / 100;
+        
+        if (pct > 0) {
+            if (level === 1) return "Generous Client 🌟";
+            if (level === 2) return "Philanthropist 💎";
+            if (level === 3) return "Wealth Distribution 💸";
+            return `Ascending God Tier (Lv. ${level}) ✨`;
+        } else {
+            if (level === 1) return "The Dine & Dash 🏃💨";
+            if (level === 2) return "Active Robbery 🥷";
+            if (level === 3) return "Economic Black Hole 🕳️";
+            return `Anti-Matter Realm (Lv. -${level}) ☠️`;
+        }
+    }
+
+    // Modern Pointer Event Handlers (Unifies Mouse + Touch natively)
+    function onPointerDown(e) {
+        isDragging = true;
+        lastPointerX = e.clientX;
+        
+        // Tells the browser to keep tracking this pointer even if the user slides off the element
+        dragZone.setPointerCapture(e.pointerId);
+        e.preventDefault();
+    }
+
+    function onPointerMove(e) {
+        if (!isDragging) return;
+
+        const deltaX = e.clientX - lastPointerX;
+        lastPointerX = e.clientX;
+
+        // Visual offset reaction for physical feedback
+        const barVisualOffset = Math.max(-35, Math.min(35, deltaX * 2));
+        dragBar.style.transform = `translateX(${barVisualOffset}px)`;
+
+        // Calculate value changes smoothly
+        percentage += Math.round(deltaX * 0.7);
+        percentageEl.textContent = `${percentage}%`;
+
+        // Check Milestone cross-points
+        const targetedMilestone = Math.round(percentage / 100) * 100;
+        
+        if (targetedMilestone !== lastMilestone && targetedMilestone !== 0) {
+            lastMilestone = targetedMilestone;
+            
+            milestoneTitle.textContent = getMilestoneName(targetedMilestone);
+            milestoneTitle.className = ''; 
+            void milestoneTitle.offsetWidth; // Force CSS refresh cycle
+            milestoneTitle.className = 'pulse-text';
+            
+            triggerMilestoneEffect(targetedMilestone > 0);
+        } else if (percentage === 0 && lastMilestone !== 0) {
+            lastMilestone = 0;
+            milestoneTitle.textContent = "Absolute Zero";
+        }
+    }
+
+    function onPointerUp(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        dragBar.style.transform = 'translateX(0px)';
+    }
+
+    // Attach robust standard Pointer Listeners
+    dragZone.addEventListener('pointerdown', onPointerDown);
+    dragZone.addEventListener('pointermove', onPointerMove);
+    dragZone.addEventListener('pointerup', onPointerUp);
+    dragZone.addEventListener('pointercancel', onPointerUp);
+</script>
+
+</body>
+</html>
