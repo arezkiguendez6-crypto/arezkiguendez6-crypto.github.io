@@ -1,14 +1,25 @@
-
-    <style>
-
-        body{
-            background-color: LemonChiffon;
-        }
-        header{
-            background-color: SkyBlue;
-        }
-footer{
-    color: white;
+body{
+    background-color: SkyBlue;
 
 
-    </style>
+}
+
+
+.orange{
+    background-color: orange;
+}
+
+.big{
+    font-size: 3em;
+}
+
+
+#tiny{
+    font-size: 0.5em;
+}
+header{
+    border: 5px black solid
+}
+
+
+
