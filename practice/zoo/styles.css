@@ -22,4 +22,29 @@ header{
 }
 
 
+nav{
+    height: 35px;
+	padding: 5px;
+	margin: none;
+}
+ul{
+	text-align: center;
+	list-style: none;
+	list-style-type: none;
+    }
+   
+ li{
+	background-color: lightblue;
+	padding: 5px;
+	margin: 10px;
+	display: inline;
+	border: 5px black solid;
+    }
+
+    li:hover{
+	background-color: lemonchiffon;
+    }
+
+
+
 
