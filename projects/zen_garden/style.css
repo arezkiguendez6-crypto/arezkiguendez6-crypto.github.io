@@ -1,7 +1,63 @@
 /*
   ITD110 Zen Garden Project
-  Your name:
-  Your design concept (one sentence):
+  Your name:Arezki G
+  Your design concept (one sentence):This page is designed to look appealing and
+  showcase the different events by making the images in like a cards format 
+  stacked upone eachother
 
   All of your CSS goes in this file.
 */
+
+body{
+    background-color: LemonChiffon;
+}
+
+body{
+    font-family: 'Atkinson Hyperlegible', Verdana, sans-serif
+}
+#disclaimer{
+    background-color:skyblue;
+    border: 15px red solid;
+}
+#disclaimer::before{
+    display:block;
+    content:"Squirtle";
+    height:200px;
+    background-color:pink;
+}
+/* These rules always apply */
+body {
+    font-size: 1.25rem;
+}
+
+/* These rules only apply when the screen is 600px wide or less */
+@media (max-width: 600px) {
+    body {
+        font-size: 1rem;
+    }
+}
+body {
+    display: grid;
+    grid:
+        "head head" auto
+        "header header" auto
+        "menu main" 1fr
+        "foot foot" auto
+        / 200px 1fr;
+}
+header { grid-area: head; }
+nav    { grid-area: menu; }
+main   { grid-area: main; }
+footer { grid-area: foot; }
+
+/* On small screens: one column, with everything stacked */
+@media (max-width: 600px) {
+    body {
+        grid:
+            "head" auto
+            "menu" auto
+            "main" 1fr
+            "foot" auto
+            / 1fr;
+    }
+}
