@@ -27,6 +27,7 @@ body{
 
 #disclaimer{
     background-color: red;
+    grid-area: disclaimer;
 }
 
 
@@ -47,7 +48,8 @@ body {
 body {
     display: grid;
     grid:
-        "head head" auto
+        "disclaimer disclaimer" auto
+        "head head" 1fr
         "menu main" 1fr
         "foot foot" auto
         / 200px 1fr;
@@ -70,8 +72,14 @@ footer { grid-area: foot; }
         }
     }
 
+.submenu {
+    display: none;
+}
 
-
+.menu-item:hover .submenu,
+.menu-item:focus-within .submenu {
+    display: block;
+}
 
 
 
