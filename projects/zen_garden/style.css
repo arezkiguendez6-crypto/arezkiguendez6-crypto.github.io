@@ -12,19 +12,25 @@ body{
     background-color: LemonChiffon;
 }
 
-body{
-    font-family: 'Atkinson Hyperlegible', Verdana, sans-serif
+.im-fell-dw-pica-regular {
+  font-family: "IM Fell DW Pica", serif;
+  font-weight: 400;
+  font-style: normal;
 }
+
+.im-fell-dw-pica-regular-italic {
+  font-family: "IM Fell DW Pica", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+
 #disclaimer{
-    background-color:skyblue;
-    border: 15px red solid;
+    background-color: red;
 }
-#disclaimer::before{
-    display:block;
-    content:"Squirtle";
-    height:200px;
-    background-color:pink;
-}
+
+
+
 /* These rules always apply */
 body {
     font-size: 1.25rem;
@@ -35,16 +41,18 @@ body {
     body {
         font-size: 1rem;
     }
+
+
 }
 body {
     display: grid;
     grid:
         "head head" auto
-        "header header" auto
         "menu main" 1fr
         "foot foot" auto
         / 200px 1fr;
 }
+
 header { grid-area: head; }
 nav    { grid-area: menu; }
 main   { grid-area: main; }
@@ -59,5 +67,17 @@ footer { grid-area: foot; }
             "main" 1fr
             "foot" auto
             / 1fr;
+        }
     }
-}
+
+
+
+
+
+
+
+
+
+
+
+
