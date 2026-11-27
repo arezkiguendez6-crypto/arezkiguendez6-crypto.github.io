@@ -30,9 +30,6 @@ body{
     grid-area: disclaimer;
 }
 
-h1,h2,h3,h4,h5,h6 {
-    color: #8B0000
-}
 
 
 /* These rules always apply */
@@ -85,9 +82,22 @@ footer { grid-area: foot; }
 }
 
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
 
+.logo {
+    width: 200px;
+}
 
-
+nav {
+    display: flex;
+    gap: 10px;
+}
 
 
 
