@@ -30,6 +30,9 @@ body{
     grid-area: disclaimer;
 }
 
+h1,h2,h3,h4,h5,h6 {
+    color: #8B0000
+}
 
 
 /* These rules always apply */
